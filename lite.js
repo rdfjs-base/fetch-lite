@@ -27,6 +27,10 @@ function rdfFetch (url, options) {
   }).then(function () {
     return fetch(url, options)
   }).then(function (res) {
+    if (res.status === 204) {
+      return res
+    }
+
     return res.text().then(function (body) {
       var responseContentType = options.defaultContentType || rdfFetch.defaults.defaultContentType || formats.parsers.list().shift()
 

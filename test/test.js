@@ -141,6 +141,18 @@ describe('rdf-fetch', function () {
       return rdfFetchLite('http://example.org/body-content-type-formats', {method: 'post', body: testGraph, formats: formats})
     })
 
+    it('should not attach the graph object if there is no content (status code 204)', function () {
+      nock('http://example.org')
+        .get('/response-content-type')
+        .reply(function () {
+          return [204, '']
+        })
+
+      rdfFetchLite('http://example.org/response-content-type', {formats: formats}).then(function (res) {
+        assert.equal(res.graph, null)
+      })
+    })
+
     it('should use the Content-Type header field to find the parsers to parse the response', function () {
       return new Promise(function (resolve, reject) {
         nock('http://example.org')
