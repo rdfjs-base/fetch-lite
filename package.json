@@ -1,6 +1,6 @@
 {
   "name": "rdf-fetch",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Uses Fetch to send and receive RDF-Ext Graphs over HTTP",
   "main": "index.js",
   "scripts": {
