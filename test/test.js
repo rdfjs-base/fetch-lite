@@ -98,6 +98,19 @@ describe('rdf-fetch', function () {
       })
     })
 
+    it('should not touch the body if it is a String', function () {
+      nock('http://example.org')
+        .post('/body-string')
+        .reply(function (url, body) {
+          assert.equal(this.req.headers['content-type'], 'application/n-triples')
+          assert.equal(body, 'test')
+
+          return [200, '', {'Content-Type': 'application/n-triples'}]
+        })
+
+      return rdfFetchLite('http://example.org/body-string', {method: 'post', headers: {'Content-Type': 'application/n-triples'}, body: 'test', formats: formats})
+    })
+
     it('should use the content type given in options to serialize the body', function () {
       nock('http://example.org')
         .post('/body-content-type')

@@ -14,6 +14,10 @@ function rdfFetch (url, options) {
   options.headers.Accept = formats.parsers.list().join(', ')
 
   return Promise.resolve().then(function () {
+    if (typeof options.body === 'string') {
+      return
+    }
+
     if (options.body) {
       var reqContentType = options.headers && (options.headers['content-type'] || options.headers['Content-Type'])
       var bodyContentType = reqContentType || rdfFetch.defaults.contentType || formats.serializers.list().shift()
