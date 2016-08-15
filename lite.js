@@ -11,7 +11,7 @@ function rdfFetch (url, options) {
   }
 
   options.headers = options.headers || {}
-  options.headers.Accept = formats.parsers.list().join(', ')
+  options.headers.Accept = options.headers.accept || options.headers.Accept || formats.parsers.list().join(', ')
 
   return Promise.resolve().then(function () {
     if (typeof options.body === 'string') {

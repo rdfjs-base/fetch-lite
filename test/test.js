@@ -340,5 +340,17 @@ describe('rdf-fetch', function () {
 
       return rdfFetch('http://example.org/formats-options', {formats: customFormats})
     })
+
+    it('should not replace the accept header', function () {
+      nock('http://example.org')
+        .get('/accept-header')
+        .reply(200, function () {
+          assert.equal(this.req.headers.accept, 'application/n-triples')
+
+          return [200, '{}']
+        })
+
+      return rdfFetch('http://example.org/accept-header', {headers: {accept: 'application/n-triples'}})
+    })
   })
 })
