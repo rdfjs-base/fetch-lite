@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "standard",
-    "test": "mocha"
+    "test": "npm run lint && mocha"
   },
   "repository": {
     "type": "git",
@@ -23,26 +23,14 @@
   },
   "homepage": "https://github.com/rdf-ext/rdf-fetch-lite",
   "dependencies": {
-    "babelify": "^7.3.0",
-    "nodeify-fetch": "^0.1.2",
-    "rdf-formats-common": "git://github.com/rdf-ext/rdf-formats-common#develop"
+    "nodeify-fetch": "^0.2.0"
   },
   "devDependencies": {
-    "mocha": "^2.5.3",
-    "nock": "^8.0.0",
-    "rdf-ext": "^0.3.0",
-    "standard": "^7.1.2"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "babelify",
-        {
-          "presets": [
-            "es2015"
-          ]
-        }
-      ]
-    ]
+    "mocha": "^3.2.0",
+    "nock": "^9.0.9",
+    "rdf-ext": "git://github.com/rdf-ext/rdf-ext#develop",
+    "rdf-formats-common": "git://github.com/rdf-ext/rdf-formats-common#develop",
+    "rdf-source": "git://github.com/rdf-ext/rdf-source#develop",
+    "standard": "^9.0.2"
   }
 }
