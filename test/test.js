@@ -335,9 +335,10 @@ describe('rdf-fetch', () => {
         list: () => {
           return []
         },
-        import: (mediaType, stream, callback, url) => {
-          assert.equal(callback, null)
-          assert.equal(url, 'http://example.org/parser-parameters')
+        import: (mediaType, stream, options) => {
+          assert.deepEqual(options, {
+            baseIRI: 'http://example.org/parser-parameters'
+          })
 
           let quadStream = new Event()
 
@@ -377,7 +378,7 @@ describe('rdf-fetch', () => {
         list: () => {
           return []
         },
-        import: (mediaType, content, callback, url) => {
+        import: () => {
           let stream = new RdfSource()
 
           stream.push(rdf.quad(
