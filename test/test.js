@@ -193,7 +193,7 @@ describe('rdf-fetch', () => {
       .post('/body-content-type-formats')
       .reply(function (url, body) {
         assert.equal(this.req.headers['content-type'], 'application/ld+json')
-        assert.equal(body, '[{"@id":"http://example.org/subject","http://example.org/predicate":"object"}]')
+        assert.equal(body, '[{"@id":"@default","@graph":{"@id":"http://example.org/subject","http://example.org/predicate":"object"}}]')
 
         return [200, '', {'Content-Type': 'application/n-triples'}]
       })
