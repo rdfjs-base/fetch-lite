@@ -1,8 +1,9 @@
 # RDF-Ext Fetch
 
 [![Build Status](https://travis-ci.org/rdf-ext/rdf-fetch-lite.svg?branch=master)](https://travis-ci.org/rdf-ext/rdf-fetch-lite)
-[![NPM Version](https://img.shields.io/npm/v/rdf-fetch-lite.svg?style=flat)](https://npm.im/rdf-fetch-lite)
+[![npm version](https://badge.fury.io/js/rdf-fetch-lite.svg)](https://badge.fury.io/js/rdf-fetch-lite)
 
-Uses [Fetch](https://fetch.spec.whatwg.org/) to send and receive RDF-Ext Graphs over HTTP.
-
-See the [wiki page](https://github.com/rdf-ext/documentation/wiki/rdf-fetch-lite) for more details.
+This is the light version of the `rdf-fetch` package without the `rdf-formats-common` dependency.
+It can be usefully if you want to make a Browserify build with a reduced set of parsers and serializers.
+The `formats` options is required for this package.
+For further details see the `rdf-fetch` documentation.
