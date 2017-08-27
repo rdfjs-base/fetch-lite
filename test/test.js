@@ -337,7 +337,8 @@ describe('rdf-fetch', () => {
         },
         import: (mediaType, stream, options) => {
           assert.deepEqual(options, {
-            baseIRI: 'http://example.org/parser-parameters'
+            baseIRI: 'http://example.org/parser-parameters',
+            context: undefined
           })
 
           let quadStream = new Event()
@@ -399,6 +400,44 @@ describe('rdf-fetch', () => {
       return res.dataset()
     }).then((dataset) => {
       assert(simpleDataset.equals(dataset))
+    })
+  })
+
+  it('should fetch the JSON-LD context if Link header is used', () => {
+    const content = [{
+      '@id': 'http://example.org/graph',
+      '@graph': {
+        '@id': 'http://example.org/subject',
+        'predicate': 'object'
+      }
+    }]
+
+    const context = {
+      '@vocab': 'http://example.org/'
+    }
+
+    nock('http://example.org')
+      .get('/jsonld-context')
+      .reply(() => {
+        return [200, JSON.stringify(content), {
+          'Content-Type': 'application/ld+json',
+          'Link': [
+            '</jsonld-context.context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"',
+            '</jsonld-context.hydra>; rel="http://www.w3.org/ns/hydra#api"; type="application/ld+json"'
+          ]
+        }]
+      })
+
+    nock('http://example.org')
+      .get('/jsonld-context.context')
+      .reply(() => {
+        return [200, JSON.stringify(context), {'Content-Type': 'application/ld+json'}]
+      })
+
+    return rdfFetch('http://example.org/jsonld-context', {formats: formats}).then((res) => {
+      return res.dataset()
+    }).then((dataset) => {
+      assert.equal(dataset.toCanonical(), simpleDataset.toCanonical())
     })
   })
 })
