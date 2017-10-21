@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/rdf-ext/rdf-fetch-lite",
   "dependencies": {
-    "nodeify-fetch": "^0.2.0"
+    "nodeify-fetch": "^2.0.0"
   },
   "devDependencies": {
     "mocha": "^3.2.0",
