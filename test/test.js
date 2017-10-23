@@ -20,7 +20,7 @@ function expectError (p) {
   })
 }
 
-describe('rdf-fetch', () => {
+describe('rdf-fetch-lite', () => {
   const simpleDataset = rdf.dataset([
     rdf.quad(
       rdf.namedNode('http://example.org/subject'),
@@ -192,8 +192,14 @@ describe('rdf-fetch', () => {
     nock('http://example.org')
       .post('/body-content-type-formats')
       .reply(function (url, body) {
-        assert.equal(this.req.headers['content-type'], 'application/ld+json')
-        assert.equal(body, '[{"@id":"@default","@graph":{"@id":"http://example.org/subject","http://example.org/predicate":"object"}}]')
+        assert.equal(this.req.headers['content-type'], formats.serializers.list().shift())
+        assert.deepEqual(body, [{
+          '@id': '@default',
+          '@graph': {
+            '@id': 'http://example.org/subject',
+            'http://example.org/predicate': 'object'
+          }
+        }])
 
         return [200, '', {'Content-Type': 'application/n-triples'}]
       })
@@ -417,14 +423,52 @@ describe('rdf-fetch', () => {
     }
 
     nock('http://example.org')
+      .get('/json-context')
+      .reply(() => {
+        return [200, JSON.stringify(content), {
+          'Content-Type': 'application/json',
+          'Link': [
+            '</json-context.context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"',
+            '</json-context.hydra>; rel="http://www.w3.org/ns/hydra#api"; type="application/ld+json"'
+          ].join(', ')
+        }]
+      })
+
+    nock('http://example.org')
+      .get('/json-context.context')
+      .reply(() => {
+        return [200, JSON.stringify(context), {'Content-Type': 'application/ld+json'}]
+      })
+
+    return rdfFetch('http://example.org/json-context', {formats: formats}).then((res) => {
+      return res.dataset()
+    }).then((dataset) => {
+      assert.equal(dataset.toCanonical(), simpleDataset.toCanonical())
+    })
+  })
+
+  it('should not fetch the JSON-LD context of the content is already application/ld+json', () => {
+    const content = [{
+      '@context': {
+        '@vocab': 'http://example.org/'
+      },
+      '@id': 'http://example.org/graph',
+      '@graph': {
+        '@id': 'http://example.org/subject',
+        'predicate': 'object'
+      }
+    }]
+
+    const context = {
+      '@vocab': 'http://example.com/'
+    }
+
+    nock('http://example.org')
       .get('/jsonld-context')
       .reply(() => {
         return [200, JSON.stringify(content), {
           'Content-Type': 'application/ld+json',
-          'Link': [
-            '</jsonld-context.context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"',
-            '</jsonld-context.hydra>; rel="http://www.w3.org/ns/hydra#api"; type="application/ld+json"'
-          ]
+          'Link': '</jsonld-context.context>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
         }]
       })
 
