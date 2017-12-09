@@ -193,7 +193,7 @@ describe('rdf-fetch-lite', () => {
       .post('/body-content-type-formats')
       .reply(function (url, body) {
         assert.equal(this.req.headers['content-type'], formats.serializers.list().shift())
-        assert.deepEqual(body, [{
+        assert.deepEqual(JSON.parse(body), [{
           '@id': '@default',
           '@graph': {
             '@id': 'http://example.org/subject',
@@ -410,6 +410,12 @@ describe('rdf-fetch-lite', () => {
   })
 
   it('should fetch the JSON-LD context if Link header is used', () => {
+    const customFormats = {
+      parsers: new rdf.Parsers({
+        'application/json': formats.parsers['application/ld+json']
+      })
+    }
+
     const content = [{
       '@id': 'http://example.org/graph',
       '@graph': {
@@ -440,7 +446,7 @@ describe('rdf-fetch-lite', () => {
         return [200, JSON.stringify(context), {'Content-Type': 'application/ld+json'}]
       })
 
-    return rdfFetch('http://example.org/json-context', {formats: formats}).then((res) => {
+    return rdfFetch('http://example.org/json-context', {formats: customFormats}).then((res) => {
       return res.dataset()
     }).then((dataset) => {
       assert.equal(dataset.toCanonical(), simpleDataset.toCanonical())
