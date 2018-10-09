@@ -1,32 +1,21 @@
 const nodeifyFetch = require('nodeify-fetch')
-const patchRequest = require('./lib/patch-request')
-const patchResponse = require('./lib/patch-response')
+const patchRequest = require('./lib/patchRequest')
+const patchResponse = require('./lib/patchResponse')
 
-function rdfFetch (url, options) {
-  options = options || {}
-  options.headers = options.headers || {}
+function rdfFetch (url, options = {}) {
+  const factory = options.factory
+  const fetch = options.fetch || nodeifyFetch
+  const formats = options.formats
 
-  let context = {
-    url: url,
-    options: options,
-    defaults: rdfFetch.defaults,
-    fetch: options.fetch || rdfFetch.defaults.fetch,
-    formats: options.formats || rdfFetch.defaults.formats
-  }
-
-  if (!context.formats) {
+  if (!formats) {
     return Promise.reject(new Error('no formats given'))
   }
 
-  return patchRequest(context).then(() => {
-    return context.fetch(context.url, context.options)
-  }).then((res) => {
-    return patchResponse(context, res)
-  })
-}
+  options = patchRequest(options, formats)
 
-rdfFetch.defaults = {
-  fetch: nodeifyFetch
+  return fetch(url, options).then(res => {
+    return patchResponse(res, options, factory, fetch, formats.parsers)
+  })
 }
 
 module.exports = rdfFetch

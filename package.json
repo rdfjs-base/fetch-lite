@@ -1,19 +1,18 @@
 {
-  "name": "rdf-fetch-lite",
+  "name": "@rdfjs/fetch-lite",
   "version": "1.1.2",
-  "description": "Light version of the rdf-fetch package",
+  "description": "Wrapper for fetch to simplify sending and receiving RDF data",
   "main": "index.js",
   "scripts": {
     "test": "standard && mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rdf-ext/rdf-fetch-lite.git"
+    "url": "git://github.com/rdfjs/fetch-lite.git"
   },
   "keywords": [
     "rdf",
     "rdfjs",
-    "rdf-ext",
     "fetch",
     "light",
     "lite"
@@ -21,18 +20,21 @@
   "author": "Thomas Bergwinkl <bergi@axolotlfarm.org> (https://www.bergnet.org/people/bergi/card#me)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rdf-ext/rdf-fetch-lite/issues"
+    "url": "https://github.com/rdfjs/fetch-lite/issues"
   },
-  "homepage": "https://github.com/rdf-ext/rdf-fetch-lite",
+  "homepage": "https://github.com/rdfjs/fetch-lite",
   "dependencies": {
-    "nodeify-fetch": "^2.0.0",
-    "rdf-ext": "^1.1.0"
+    "nodeify-fetch": "^2.0.0"
   },
   "devDependencies": {
-    "mocha": "^3.2.0",
-    "nock": "^9.0.9",
-    "rdf-formats-common": "^1.0.0",
-    "rdf-source": "^1.0.0",
-    "standard": "^9.0.2"
+    "@rdfjs/formats-common": "git+https://github.com/rdfjs/formats-common.git#master",
+    "mocha": "^5.2.0",
+    "nock": "^10.0.0",
+    "rdf-ext": "^1.1.2",
+    "readable-stream": "^3.0.3",
+    "standard": "^12.0.1"
+  },
+  "engines": {
+    "node": ">=6"
   }
 }
