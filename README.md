@@ -4,26 +4,26 @@
 
 [![npm version](https://img.shields.io/npm/v/@rdfjs/fetch-lite.svg)](https://www.npmjs.com/package/@rdfjs/fetch-lite)
 
-Wrapper for fetch to simplify sending and receiving RDF data.
+Wrapper for fetch to simplify sending and retrieving RDF data.
 
-This is the light version of the `@rdfjs/fetch` package without the `@rdfjs/formats-common` dependency.
-It can be usefully if you want to make a build for the browser with a reduced set of parsers and serializers.
+This is a light version of the `@rdfjs/fetch` package, without the `@rdfjs/formats-common` dependency.
+It can be useful if you want to make a build for the browser with a reduced set of parsers and serializers.
 The `formats` options is required for this package.
 See also the `@rdfjs/fetch` documentation.
 
 ## Usage
 
-The package exports a fetch function which wraps the request and response object for on the fly RDF quad processing.
-The function accepts the same parameters like [fetch](https://fetch.spec.whatwg.org/), but also accepts some addition options and provides additional methods.
+The package exports a `fetch` function which wraps the request and response object for on-the-fly RDF quad processing.
+The function accepts the same parameters like [fetch](https://fetch.spec.whatwg.org/), but also accepts some additional options and provides extra methods.
 
 ### Options
 
 The `options` object accepts the following additional parameters:
 
-- `formats`: An [formats-common](https://github.com/rdfjs/formats-common) compatible object which contains a set of parsers and serializers.
+- `formats`: A [formats-common](https://github.com/rdfjs/formats-common)-compatible object which contains a set of parsers and serializers.
   This parameter is required.
 - `factory`: If given, the factory will be used to create a Dataset when `dataset()` is called.
-  If the parameter is not given, the `dataset()` method will be not attached to the response.
+  If the parameter is not given, the `dataset()` method will not be attached to the response.
 - `fetch`: An alternative fetch implementation.
   By default [nodeify-fetch](https://github.com/bergos/nodeify-fetch) will be used.
 
