@@ -42,7 +42,7 @@ The following `options` influence the logic of RDF quad processing:
 
 The following methods are attached to the standard fetch response object:
 
-- `quadStream()`: This method returns the quads of the response as stream.
+- async `quadStream()`: This method returns the quads of the response as stream.
   The parser is selected based on the content type header field.
 - async `dataset()`: This method uses the `quadStream()` method to parse the content and will pipe it into a dataset, which is also the return value.
   This method is only available when the `factory` option is given.
