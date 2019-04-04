@@ -5,6 +5,7 @@ const example = require('./support/example')
 const expectError = require('./support/expectError')
 const formats = require('@rdfjs/formats-common')
 const rdfFetch = require('..')
+const toStream = require('../lib/toStream')
 const virtualResource = require('./support/virtualResource')
 const Readable = require('readable-stream')
 const SinkMap = require('@rdfjs/sink-map')
@@ -87,7 +88,7 @@ describe('request', () => {
       headers: {
         'content-type': 'application/n-triples'
       },
-      body: example.dataset.toStream()
+      body: toStream(example.dataset)
     }).then(() => {
       assert.strictEqual(result.content, example.quadNt)
     })
@@ -104,7 +105,7 @@ describe('request', () => {
         headers: {
           'content-type': 'text/plain'
         },
-        body: example.dataset.toStream()
+        body: toStream(example.dataset)
       })
     })
   })
@@ -131,10 +132,26 @@ describe('request', () => {
 
     return rdfFetch(`http://example.org${id}`, {
       formats: customFormats,
-      body: example.dataset.toStream()
+      body: toStream(example.dataset)
     }).then(() => {
       assert.deepStrictEqual(result.headers['content-type'], ['text/turtle'])
       assert.strictEqual(result.content, 'test')
+    })
+  })
+
+  it('should serialize a iterable', () => {
+    const id = '/request/iterable'
+
+    const result = virtualResource({ id })
+
+    return rdfFetch(`http://example.org${id}`, {
+      formats,
+      headers: {
+        'content-type': 'application/n-triples'
+      },
+      body: example.dataset
+    }).then(() => {
+      assert.strictEqual(result.content, example.quadNt)
     })
   })
 })

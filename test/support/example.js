@@ -1,4 +1,7 @@
-const rdf = require('rdf-ext')
+const rdf = {
+  ...require('@rdfjs/data-model'),
+  ...require('@rdfjs/dataset')
+}
 
 const example = {}
 

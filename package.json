@@ -24,14 +24,16 @@
   },
   "homepage": "https://github.com/rdfjs/fetch-lite",
   "dependencies": {
-    "nodeify-fetch": "^2.0.0"
+    "isstream": "^0.1.2",
+    "nodeify-fetch": "^2.0.0",
+    "readable-stream": "^3.3.0"
   },
   "devDependencies": {
-    "@rdfjs/formats-common": "git+https://github.com/rdfjs/formats-common.git#master",
+    "@rdfjs/data-model": "^1.1.1",
+    "@rdfjs/dataset": "^1.0.0",
+    "@rdfjs/formats-common": "^2.0.0",
     "mocha": "^5.2.0",
     "nock": "^10.0.0",
-    "rdf-ext": "^1.1.2",
-    "readable-stream": "^3.0.3",
     "standard": "^12.0.1"
   },
   "engines": {

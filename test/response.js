@@ -4,9 +4,10 @@ const assert = require('assert')
 const example = require('./support/example')
 const expectError = require('./support/expectError')
 const formats = require('@rdfjs/formats-common')
-const rdfExt = require('rdf-ext')
+const rdfDataset = require('@rdfjs/dataset')
 const rdfFetch = require('..')
 const virtualResource = require('./support/virtualResource')
+const waitFor = require('../lib/waitFor')
 const Readable = require('readable-stream')
 const SinkMap = require('@rdfjs/sink-map')
 
@@ -48,7 +49,7 @@ describe('response', () => {
 
         quadStream.on('data', quad => quads.push(quad))
 
-        return rdfExt.waitFor(quadStream).then(() => {
+        return waitFor(quadStream).then(() => {
           assert(example.quad.equals(quads[0]))
         })
       })
@@ -148,7 +149,7 @@ describe('response', () => {
 
       virtualResource({ id })
 
-      return rdfFetch(`http://example.org${id}`, { factory: rdfExt, formats }).then(res => {
+      return rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats }).then(res => {
         assert.strictEqual(typeof res.dataset, 'function')
       })
     })
@@ -158,8 +159,8 @@ describe('response', () => {
 
       virtualResource({ id })
 
-      return rdfFetch(`http://example.org${id}`, { factory: rdfExt, formats }).then(res => res.dataset()).then(dataset => {
-        assert.strictEqual(typeof dataset.addAll, 'function')
+      return rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats }).then(res => res.dataset()).then(dataset => {
+        assert.strictEqual(typeof dataset.add, 'function')
       })
     })
 
@@ -169,9 +170,9 @@ describe('response', () => {
 
       virtualResource({ id, content })
 
-      return rdfFetch(`http://example.org${id}`, { factory: rdfExt, formats }).then(res => res.dataset()).then(dataset => {
-        assert.strictEqual(dataset.toArray().length, 1)
-        assert(example.quad.equals(dataset.toArray()[0]))
+      return rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats }).then(res => res.dataset()).then(dataset => {
+        assert.strictEqual(dataset.size, 1)
+        assert(example.quad.equals([...dataset][0]))
       })
     })
 
@@ -180,8 +181,8 @@ describe('response', () => {
 
       virtualResource({ id })
 
-      return rdfFetch(`http://example.org${id}`, { factory: rdfExt, formats }).then(res => res.dataset()).then(dataset => {
-        assert.strictEqual(dataset.toArray().length, 0)
+      return rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats }).then(res => res.dataset()).then(dataset => {
+        assert.strictEqual(dataset.size, 0)
       })
     })
   })
@@ -246,7 +247,7 @@ describe('response', () => {
 
         quadStream.on('data', quad => quads.push(quad))
 
-        return rdfExt.waitFor(quadStream).then(() => {
+        return waitFor(quadStream).then(() => {
           assert(example.quad.equals(quads[0]))
         })
       })
