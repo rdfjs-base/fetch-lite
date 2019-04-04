@@ -14,7 +14,7 @@ See also the `@rdfjs/fetch` documentation.
 ## Usage
 
 The package exports a `fetch` function which wraps the request and response object for on-the-fly RDF quad processing.
-The function accepts the same parameters like [fetch](https://fetch.spec.whatwg.org/), but also accepts some additional options and provides additional methods.
+The function accepts the same parameters like [fetch](https://fetch.spec.whatwg.org/), but also accepts some additional options and provides extra methods.
 
 ### Options
 
