@@ -14,7 +14,7 @@ function rdfFetch (url, options = {}) {
   options = patchRequest(options, formats)
 
   return fetch(url, options).then(res => {
-    return patchResponse(res, options, factory, fetch, formats.parsers)
+    return patchResponse(res, factory, fetch, formats.parsers)
   })
 }
 
