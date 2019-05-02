@@ -1,5 +1,7 @@
 const nock = require('nock')
 
+const whitelistedVerbs = ['GET', 'POST']
+
 function virtualResource ({ method = 'GET', id, statusCode, content, contentType = 'application/n-triples', headers = {} } = {}) {
   const result = {
     content: null,
@@ -8,10 +10,9 @@ function virtualResource ({ method = 'GET', id, statusCode, content, contentType
 
   let request
 
-  if (method === 'GET') {
-    request = nock('http://example.org').get(new RegExp(`${id}.*`))
-  } else if (method === 'POST') {
-    request = nock('http://example.org').post(id)
+  if (whitelistedVerbs.includes(method)) {
+    const nockMethod = method.toLowerCase()
+    request = nock('http://example.org')[nockMethod](new RegExp(`${id}.*`))
   }
 
   request.reply(function (uri, body) {
@@ -21,6 +22,12 @@ function virtualResource ({ method = 'GET', id, statusCode, content, contentType
 
     if (contentType) {
       headers['content-type'] = contentType
+    }
+
+    // HTTP errors are usually text/html
+    if (statusCode && statusCode > 399) {
+      headers['content-type'] = 'text/html'
+      result.content = `Error: HTTP${statusCode}`
     }
 
     return [statusCode || (content ? 200 : 201), content, headers]

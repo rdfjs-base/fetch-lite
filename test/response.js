@@ -1,6 +1,7 @@
 /* global describe, it */
 
 const assert = require('assert')
+const rdf = require('rdf-ext')
 const example = require('./support/example')
 const expectError = require('./support/expectError')
 const formats = require('@rdfjs/formats-common')
@@ -89,6 +90,28 @@ describe('response', () => {
 
       return expectError(() => {
         return rdfFetch(`http://example.org${id}`, { formats }).then(res => res.quadStream())
+      })
+    })
+
+    it('should report HTTP errors when content type has no match', () => {
+      [
+        ['/request/400', 400],
+        ['/request/404', 404],
+        ['/request/500', 500]
+      ].forEach(async ([id, statusCode]) => {
+        virtualResource({ id, statusCode })
+
+        const res = await rdfFetch(`http://example.org${id}`, { formats, factory: rdf })
+        res.quadStream().then(
+          () => Promise.reject(new Error('Expected method to reject.')),
+          (err) => {
+            assert.strictEqual(err.message, `Fetching failed with HTTP${statusCode}`)
+          })
+        res.dataset().then(
+          () => Promise.reject(new Error('Expected method to reject.')),
+          (err) => {
+            assert.strictEqual(err.message, `Fetching failed with HTTP${statusCode}`)
+          })
       })
     })
 
