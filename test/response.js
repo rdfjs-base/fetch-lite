@@ -134,14 +134,17 @@ describe('response', () => {
   })
 
   describe('dataset', () => {
-    it('should be undefined if no factory is given', () => {
+    it('should throw when dataset factory is missing', async () => {
       const id = '/response/dataset/undefined'
 
       virtualResource({ id })
 
-      return rdfFetch(`http://example.org${id}`, { formats }).then(res => {
-        assert.strictEqual(typeof res.dataset, 'undefined')
-      })
+      const res = await rdfFetch(`http://example.org${id}`, { formats })
+      await res.dataset().then(
+        () => Promise.reject(new Error('Expected method to reject.')),
+        (err) => {
+          assert.strictEqual(err.message, `Missing dataset factory`)
+        })
     })
 
     it('should be a function', () => {
