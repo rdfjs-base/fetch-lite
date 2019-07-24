@@ -21,7 +21,7 @@ The function accepts the same parameters as [fetch](https://fetch.spec.whatwg.or
 
 The `options` object accepts the following additional parameters:
 
-- `formats`: A [formats-common](https://github.com/rdfjs/formats-common)-compatible object which contains a set of parsers and serializers.
+- `formats`: A [formats-common](https://github.com/rdfjs-base/formats-common)-compatible object which contains a set of parsers and serializers.
   This parameter is required.
 - `factory`: If given, the factory will be used to create a Dataset when `dataset()` is called.
   If the parameter is not given, the `dataset()` method will not be attached to the response.
