@@ -1,15 +1,14 @@
-/* global describe, it */
-
-const assert = require('assert')
-const jsonldContextLinkUrl = require('../lib/jsonldContextLinkUrl')
+const { strictEqual } = require('assert')
+const { describe, it } = require('mocha')
+const jsonldContextLinkUrlTest = require('../lib/jsonldContextLinkUrl')
 
 describe('jsonldContextLinkUrl', () => {
   it('should be a function', () => {
-    assert.strictEqual(typeof jsonldContextLinkUrl, 'function')
+    strictEqual(typeof jsonldContextLinkUrlTest, 'function')
   })
 
   it('should return null if the content type is not application/json', () => {
-    assert.strictEqual(jsonldContextLinkUrl({}, 'text/turtle'), null)
+    strictEqual(jsonldContextLinkUrlTest({}, 'text/turtle'), null)
   })
 
   it('should return null if there is no link header', () => {
@@ -17,7 +16,7 @@ describe('jsonldContextLinkUrl', () => {
       headers: new Map()
     }
 
-    assert.strictEqual(jsonldContextLinkUrl(res, 'application/json'), null)
+    strictEqual(jsonldContextLinkUrlTest(res, 'application/json'), null)
   })
 
   it('should return null if there is no JSON-LD context link header', () => {
@@ -27,7 +26,7 @@ describe('jsonldContextLinkUrl', () => {
       ]])
     }
 
-    assert.strictEqual(jsonldContextLinkUrl(res, 'application/json'), null)
+    strictEqual(jsonldContextLinkUrlTest(res, 'application/json'), null)
   })
 
   it('should return null if the link header is invalid', () => {
@@ -37,7 +36,7 @@ describe('jsonldContextLinkUrl', () => {
       ]])
     }
 
-    assert.strictEqual(jsonldContextLinkUrl(res, 'application/json'), null)
+    strictEqual(jsonldContextLinkUrlTest(res, 'application/json'), null)
   })
 
   it('should return the URL of the JSON-LD context link header', () => {
@@ -48,7 +47,7 @@ describe('jsonldContextLinkUrl', () => {
       ]])
     }
 
-    assert.strictEqual(jsonldContextLinkUrl(res, 'application/json'), 'http://example.org/json-context')
+    strictEqual(jsonldContextLinkUrlTest(res, 'application/json'), 'http://example.org/json-context')
   })
 
   it('should resolve the full URL using req.url', () => {
@@ -59,7 +58,7 @@ describe('jsonldContextLinkUrl', () => {
       ]])
     }
 
-    assert.strictEqual(jsonldContextLinkUrl(res, 'application/json'), 'http://example.org/json-context')
+    strictEqual(jsonldContextLinkUrlTest(res, 'application/json'), 'http://example.org/json-context')
   })
 
   it('should filter the JSON-LD context link if there are multiple link headers', () => {
@@ -73,6 +72,6 @@ describe('jsonldContextLinkUrl', () => {
       ]])
     }
 
-    assert.strictEqual(jsonldContextLinkUrl(res, 'application/json'), 'http://example.org/json-context')
+    strictEqual(jsonldContextLinkUrlTest(res, 'application/json'), 'http://example.org/json-context')
   })
 })
