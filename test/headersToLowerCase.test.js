@@ -1,11 +1,10 @@
-/* global describe, it */
-
-const assert = require('assert')
+const { deepStrictEqual, strictEqual } = require('assert')
+const { describe, it } = require('mocha')
 const headersToLowerCase = require('../lib/headersToLowerCase')
 
 describe('headersToLowerCase', () => {
   it('should be a function', () => {
-    assert.strictEqual(typeof headersToLowerCase, 'function')
+    strictEqual(typeof headersToLowerCase, 'function')
   })
 
   it('should convert keys to lower case', () => {
@@ -21,6 +20,6 @@ describe('headersToLowerCase', () => {
 
     const actual = headersToLowerCase(headers)
 
-    assert.deepStrictEqual(actual, headersLowerCase)
+    deepStrictEqual(actual, headersLowerCase)
   })
 })

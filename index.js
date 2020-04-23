@@ -18,4 +18,6 @@ function rdfFetch (url, options = {}) {
   })
 }
 
+rdfFetch.Headers = nodeifyFetch.Headers
+
 module.exports = rdfFetch
