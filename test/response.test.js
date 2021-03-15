@@ -12,6 +12,18 @@ const rdfFetch = require('..')
 
 describe('response', () => {
   describe('quadStream', () => {
+    it('should handle missing Content-Type header', async () => {
+      const id = '/response/quadstream/function'
+
+      virtualResource({ id, contentType: undefined })
+
+      // The DOAP vocab doesn't actually return any Content-Type header at all...
+      const res = await rdfFetch('http://usefulinc.com/ns/doap#', { formats })
+      await res.quadStream()
+
+      strictEqual(typeof res.quadStream, 'function')
+    })
+
     it('should be a function', async () => {
       const id = '/response/quadstream/function'
 

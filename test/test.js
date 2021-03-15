@@ -7,7 +7,7 @@ describe('@rdfjs/fetch-lite', () => {
     strictEqual(typeof rdfFetch, 'function')
   })
 
-  it('should throw an error if now formats are given', () => {
+  it('should throw an error if no formats are given', () => {
     return rejects(async () => {
       await rdfFetch('')
     })
