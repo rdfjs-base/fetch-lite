@@ -12,13 +12,26 @@ const rdfFetch = require('..')
 
 describe('response', () => {
   describe('quadStream', () => {
-    it('should handle missing Content-Type header', async () => {
+    it('should throw if missing Content-Type header and no fallback', async () => {
       const id = '/response/quadstream/function'
 
+      // The DOAP vocab (for example) doesn't actually return any Content-Type header at all...
       virtualResource({ id, contentType: undefined })
 
-      // The DOAP vocab doesn't actually return any Content-Type header at all...
-      const res = await rdfFetch('http://usefulinc.com/ns/doap#', { formats })
+      await rejects(async () => {
+        const res = await rdfFetch('http://usefulinc.com/ns/doap#', { formats })
+        await res.quadStream()
+      })
+    })
+
+    it('should fallback to provided content-type if missing Content-Type header', async () => {
+      const id = '/response/quadstream/function'
+
+      // The DOAP vocab (for example) doesn't actually return any Content-Type header at all...
+      virtualResource({ id, contentType: undefined })
+
+      const res = await rdfFetch('http://usefulinc.com/ns/doap#',
+        { formats, headers: { 'content-type': 'application/rdf+xml' } })
       await res.quadStream()
 
       strictEqual(typeof res.quadStream, 'function')
