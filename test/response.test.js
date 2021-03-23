@@ -125,6 +125,35 @@ describe('response', () => {
   })
 
   describe('dataset', () => {
+    it('should throw if response is missing Content-Type header', async () => {
+      const id = '/does/not/matter'
+      virtualResource({ id, contentType: null })
+
+      await rejects(async () => {
+        const res = await rdfFetch(`http://example.org${id}`, { formats })
+        await res.quadStream()
+      }, (err) => {
+        strictEqual(err.message, 'Fetch response is missing HTTP Content-Type header - without' +
+          ' this we can\'t determine which parser to use (consider setting this header yourself' +
+          ' on the response object before attempting to process it).')
+        return true
+      })
+    })
+
+    it('should be able to explicitly handle missing Content-Type header', async () => {
+      const id = '/response/dataset/dataset'
+      virtualResource({ id, contentType: null })
+
+      const res = await rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats })
+
+      // If we know in advance that a server doesn't provide a HTTP Content-Type header, then we can
+      // provide it explicitly ourselves...
+      res.headers.set('content-type', 'application/n-triples')
+
+      const dataset = await res.dataset()
+      strictEqual(typeof dataset.add, 'function')
+    })
+
     it('should be undefined if no factory is given', async () => {
       const id = '/response/dataset/undefined'
 
