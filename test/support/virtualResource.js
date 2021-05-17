@@ -1,6 +1,13 @@
 const nock = require('nock')
 
-function virtualResource ({ method = 'GET', id, statusCode, content, contentType = 'application/n-triples', headers = {} } = {}) {
+function virtualResource ({
+  method = 'GET',
+  id,
+  statusCode,
+  content = '<http://example.org/subject> <http://example.org/predicate> "object" .',
+  contentType = 'application/n-triples',
+  headers = {}
+} = {}) {
   const result = {
     content: null,
     touched: false
@@ -21,6 +28,10 @@ function virtualResource ({ method = 'GET', id, statusCode, content, contentType
 
     if (contentType) {
       headers['content-type'] = contentType
+    }
+
+    if (content) {
+      headers['content-length'] = content.length
     }
 
     return [statusCode || (content ? 200 : 201), content, headers]
