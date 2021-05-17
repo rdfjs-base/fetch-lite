@@ -47,6 +47,9 @@ The following methods are attached to the standard fetch response object:
 - async `dataset()`: This method uses the `quadStream()` method to parse the content and will pipe it into a dataset, which is also the return value.
   This method is only available when the `factory` option is given.
 
+The `Content-Type` header of the response can be changed or set before calling `quadStream()` or `dataset()`.
+That allows enforcing a specific parser or can be used to fix a lacking header.
+
 ### Example
 
 This example fetches data from a resource on Wikidata.

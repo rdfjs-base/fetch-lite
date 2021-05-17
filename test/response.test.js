@@ -132,10 +132,9 @@ describe('response', () => {
       await rejects(async () => {
         const res = await rdfFetch(`http://example.org${id}`, { formats })
         await res.quadStream()
-      }, (err) => {
-        strictEqual(err.message, 'Fetch response is missing HTTP Content-Type header - without' +
-          ' this we can\'t determine which parser to use (consider setting this header yourself' +
-          ' on the response object before attempting to process it).')
+      }, err => {
+        strictEqual(err.message.includes('Content-Type'), true)
+
         return true
       })
     })
