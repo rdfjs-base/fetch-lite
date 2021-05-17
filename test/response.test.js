@@ -22,6 +22,16 @@ describe('response', () => {
       strictEqual(typeof res.quadStream, 'function')
     })
 
+    it('should be undefined if there is no response body', async () => {
+      const id = '/response/quadstream/undefined'
+
+      virtualResource({ id, content: null })
+
+      const res = await rdfFetch(`http://example.org${id}`, { formats })
+
+      strictEqual(typeof res.quadStream, 'undefined')
+    })
+
     it('should return a stream', async () => {
       const id = '/response/quadstream/stream'
       const content = example.quadNt
@@ -173,6 +183,16 @@ describe('response', () => {
       strictEqual(typeof res.dataset, 'function')
     })
 
+    it('should be undefined if there is no response body', async () => {
+      const id = '/response/dataset/undefined'
+
+      virtualResource({ id, content: null })
+
+      const res = await rdfFetch(`http://example.org${id}`, { formats })
+
+      strictEqual(typeof res.quadStream, 'undefined')
+    })
+
     it('should return a Dataset', async () => {
       const id = '/response/dataset/dataset'
 
@@ -197,10 +217,11 @@ describe('response', () => {
       strictEqual(example.quad.equals([...dataset][0]), true)
     })
 
-    it('should return an empty Dataset if there is no content', async () => {
+    it('should return an empty Dataset if there is no quad in the content', async () => {
       const id = '/response/dataset/empty'
+      const content = '\n'
 
-      virtualResource({ id })
+      virtualResource({ id, content })
 
       const res = await rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats })
       const dataset = await res.dataset()
@@ -213,12 +234,13 @@ describe('response', () => {
     it('should fetch the context given in the Link header', async () => {
       const id = '/response/jsonld/fetch'
       const idContext = `${id}-context`
+      const content = '{}'
       const contentType = 'application/json'
       const headers = {
         link: `<${idContext}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`
       }
 
-      virtualResource({ id, contentType, headers })
+      virtualResource({ id, content, contentType, headers })
 
       const result = virtualResource({ id: idContext, content: '{}' })
 
@@ -231,12 +253,13 @@ describe('response', () => {
     it('should not fetch the context given in the Link header if the content type is application/ld+json', async () => {
       const id = '/response/jsonld/not-fetch'
       const idContext = `${id}-context`
+      const content = '{}'
       const contentType = 'application/ld+json'
       const headers = {
         link: `<${idContext}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"`
       }
 
-      virtualResource({ id, contentType, headers })
+      virtualResource({ id, content, contentType, headers })
 
       const result = virtualResource({ id: idContext, content: '{}' })
 

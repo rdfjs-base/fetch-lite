@@ -26,7 +26,7 @@ describe('request', () => {
       fetch: () => {
         touched = true
 
-        return Promise.resolve({})
+        return Promise.resolve({ headers: new Map() })
       },
       formats: formats
     })
