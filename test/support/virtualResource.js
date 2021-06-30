@@ -26,7 +26,7 @@ function virtualResource ({
     result.headers = this.req.headers
     result.content = body
 
-    if (contentType) {
+    if (content && contentType) {
       headers['content-type'] = contentType
     }
 

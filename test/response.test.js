@@ -32,6 +32,26 @@ describe('response', () => {
       strictEqual(typeof res.quadStream, 'undefined')
     })
 
+    it('should detect a response body base on transfer-encoding header', async () => {
+      const id = '/response/quadstream/body-transfer-encoding'
+
+      virtualResource({ id, content: null, headers: { 'transfer-encoding': 'chunked' } })
+
+      const res = await rdfFetch(`http://example.org${id}`, { formats })
+
+      strictEqual(typeof res.quadStream, 'function')
+    })
+
+    it('should detect a response body base on content-* headers', async () => {
+      const id = '/response/quadstream/body-content-type'
+
+      virtualResource({ id, content: null, headers: { 'content-type': 'text/turtle' } })
+
+      const res = await rdfFetch(`http://example.org${id}`, { formats })
+
+      strictEqual(typeof res.quadStream, 'function')
+    })
+
     it('should return a stream', async () => {
       const id = '/response/quadstream/stream'
       const content = example.quadNt
@@ -188,9 +208,29 @@ describe('response', () => {
 
       virtualResource({ id, content: null })
 
-      const res = await rdfFetch(`http://example.org${id}`, { formats })
+      const res = await rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats })
 
-      strictEqual(typeof res.quadStream, 'undefined')
+      strictEqual(typeof res.dataset, 'undefined')
+    })
+
+    it('should detect a response body base on transfer-encoding header', async () => {
+      const id = '/response/dataset/body-transfer-encoding'
+
+      virtualResource({ id, content: null, headers: { 'transfer-encoding': 'chunked' } })
+
+      const res = await rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats })
+
+      strictEqual(typeof res.dataset, 'function')
+    })
+
+    it('should detect a response body base on content-* headers', async () => {
+      const id = '/response/dataset/body-content-type'
+
+      virtualResource({ id, content: null, headers: { 'content-type': 'text/turtle' } })
+
+      const res = await rdfFetch(`http://example.org${id}`, { factory: rdfDataset, formats })
+
+      strictEqual(typeof res.dataset, 'function')
     })
 
     it('should return a Dataset', async () => {
