@@ -1,12 +1,12 @@
-const { deepStrictEqual, rejects, strictEqual } = require('assert')
-const { describe, it } = require('mocha')
-const formats = require('@rdfjs/formats-common')
-const SinkMap = require('@rdfjs/sink-map')
-const Readable = require('readable-stream')
-const example = require('./support/example')
-const virtualResource = require('./support/virtualResource')
-const toStream = require('../lib/toStream')
-const rdfFetch = require('..')
+import { deepStrictEqual, rejects, strictEqual } from 'assert'
+import formats from '@rdfjs/formats-common'
+import SinkMap from '@rdfjs/sink-map'
+import { describe, it } from 'mocha'
+import { Readable } from 'readable-stream'
+import rdfFetch from '../index.js'
+import toStream from '../lib/toStream.js'
+import example from './support/example.js'
+import virtualResource from './support/virtualResource.js'
 
 describe('request', () => {
   it('should fetch the defined resource', async () => {
@@ -46,7 +46,7 @@ describe('request', () => {
       }
     })
 
-    deepStrictEqual(result.headers.accept, ['text/html'])
+    deepStrictEqual(result.headers.accept, 'text/html')
   })
 
   it('should build an accept header based on the given parsers', async () => {
@@ -63,7 +63,7 @@ describe('request', () => {
 
     await rdfFetch(`http://example.org${id}`, { formats: customFormats })
 
-    deepStrictEqual(result.headers.accept, ['application/ld+json, text/turtle'])
+    deepStrictEqual(result.headers.accept, 'application/ld+json, text/turtle')
   })
 
   it('should forward a string body without changes', async () => {
@@ -124,7 +124,11 @@ describe('request', () => {
     const customFormats = {
       parsers: new SinkMap(),
       serializers: new SinkMap([
-        ['text/turtle', { import: () => { return stream } }],
+        ['text/turtle', {
+          import: () => {
+            return stream
+          }
+        }],
         ['application/ld+json', { import: () => {} }]
       ])
     }
@@ -135,7 +139,7 @@ describe('request', () => {
       body: toStream(example.dataset)
     })
 
-    deepStrictEqual(result.headers['content-type'], ['text/turtle'])
+    deepStrictEqual(result.headers['content-type'], 'text/turtle')
     strictEqual(result.content, 'test')
   })
 

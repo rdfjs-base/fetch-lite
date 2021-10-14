@@ -1,4 +1,4 @@
-const nock = require('nock')
+import nock from 'nock'
 
 function virtualResource ({
   method = 'GET',
@@ -34,10 +34,14 @@ function virtualResource ({
       headers['content-length'] = content.length
     }
 
-    return [statusCode || (content ? 200 : 201), content, headers]
+    if (content) {
+      return [statusCode || 200, content, headers]
+    } else {
+      return [statusCode || 201, undefined, headers]
+    }
   })
 
   return result
 }
 
-module.exports = virtualResource
+export default virtualResource

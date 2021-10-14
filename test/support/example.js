@@ -1,7 +1,7 @@
-const rdf = {
-  ...require('@rdfjs/data-model'),
-  ...require('@rdfjs/dataset')
-}
+import dataModel from '@rdfjs/data-model'
+import dataset from '@rdfjs/dataset'
+
+const rdf = { ...dataModel, ...dataset }
 
 const example = {}
 
@@ -15,4 +15,4 @@ example.quad = rdf.quad(example.subject, example.predicate, example.object)
 example.quadNt = '<http://example.org/subject> <http://example.org/predicate> "object" .\n'
 example.dataset = rdf.dataset([example.quad])
 
-module.exports = example
+export default example

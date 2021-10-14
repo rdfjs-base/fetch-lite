@@ -12,6 +12,9 @@ It is useful when you want to make a build for the browser with a reduced set of
 The `formats` options is required for this package.
 See also the `@rdfjs/fetch` documentation.
 
+Since version 3.0, this packages is [ESM](https://nodejs.org/api/esm.html) only.
+Check version 2.x if you are looking for a CommonJS package.
+
 ## Usage
 
 The package exports a `fetch` function which wraps the request and response object for on-the-fly RDF quad processing.
