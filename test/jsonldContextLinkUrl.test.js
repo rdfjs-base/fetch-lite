@@ -1,6 +1,6 @@
-const { strictEqual } = require('assert')
-const { describe, it } = require('mocha')
-const jsonldContextLinkUrlTest = require('../lib/jsonldContextLinkUrl')
+import { strictEqual } from 'assert'
+import { describe, it } from 'mocha'
+import jsonldContextLinkUrlTest from '../lib/jsonldContextLinkUrl.js'
 
 describe('jsonldContextLinkUrl', () => {
   it('should be a function', () => {

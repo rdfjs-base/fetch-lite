@@ -1,14 +1,14 @@
-const { deepStrictEqual, rejects, strictEqual } = require('assert')
-const { describe, it } = require('mocha')
-const getStream = require('get-stream')
-const { isReadable } = require('isstream')
-const rdfDataset = require('@rdfjs/dataset')
-const formats = require('@rdfjs/formats-common')
-const SinkMap = require('@rdfjs/sink-map')
-const Readable = require('readable-stream')
-const example = require('./support/example')
-const virtualResource = require('./support/virtualResource')
-const rdfFetch = require('..')
+import { deepStrictEqual, rejects, strictEqual } from 'assert'
+import rdfDataset from '@rdfjs/dataset'
+import formats from '@rdfjs/formats-common'
+import SinkMap from '@rdfjs/sink-map'
+import getStream from 'get-stream'
+import { isReadable } from 'isstream'
+import { describe, it } from 'mocha'
+import { Readable } from 'readable-stream'
+import rdfFetch from '../index.js'
+import example from './support/example.js'
+import virtualResource from './support/virtualResource.js'
 
 describe('response', () => {
   describe('quadStream', () => {

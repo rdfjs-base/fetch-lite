@@ -1,6 +1,6 @@
-const { deepStrictEqual, strictEqual } = require('assert')
-const { describe, it } = require('mocha')
-const headersToLowerCase = require('../lib/headersToLowerCase')
+import { deepStrictEqual, strictEqual } from 'assert'
+import { describe, it } from 'mocha'
+import headersToLowerCase from '../lib/headersToLowerCase.js'
 
 describe('headersToLowerCase', () => {
   it('should be a function', () => {

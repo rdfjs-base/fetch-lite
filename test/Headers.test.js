@@ -1,6 +1,6 @@
-const { strictEqual } = require('assert')
-const { describe, it } = require('mocha')
-const { Headers } = require('..')
+import { strictEqual } from 'assert'
+import { describe, it } from 'mocha'
+import { Headers } from '../index.js'
 
 describe('Headers', () => {
   it('should be a constructor', () => {
