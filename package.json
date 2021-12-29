@@ -1,6 +1,6 @@
 {
   "name": "@rdfjs/fetch-lite",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Wrapper for fetch to simplify sending and receiving RDF data",
   "type": "module",
   "main": "index.js",
