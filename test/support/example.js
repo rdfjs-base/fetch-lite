@@ -1,7 +1,8 @@
-import dataModel from '@rdfjs/data-model'
-import dataset from '@rdfjs/dataset'
+import DataModelFactory from '@rdfjs/data-model/Factory.js'
+import DatasetFactory from '@rdfjs/dataset/Factory.js'
+import Environment from '@rdfjs/environment'
 
-const rdf = { ...dataModel, ...dataset }
+const rdf = new Environment([DataModelFactory, DatasetFactory])
 
 const example = {}
 
