@@ -19,5 +19,5 @@ describe('examples', () => {
     const dataset = await res.dataset()
 
     strictEqual(dataset.size > 0, true)
-  })
+  }).timeout(30000)
 })
