@@ -20,14 +20,17 @@ describe('response', () => {
       })
     })
 
-    it('should be undefined if there is no response body', async () => {
+    it('should handle an empty response body', async () => {
       await simpleServer(async ({ baseUrl }) => {
         const res = await rdfFetch(baseUrl, { formats })
+        const quadStream = await res.quadStream()
+        const quads = await chunks(quadStream)
 
-        strictEqual(typeof res.quadStream, 'undefined')
+        deepStrictEqual(quads, [])
       }, {
         '/': {
-          content: null
+          content: null,
+          contentType: 'text/turtle'
         }
       })
     })
@@ -228,14 +231,16 @@ describe('response', () => {
       })
     })
 
-    it('should be undefined if there is no response body', async () => {
+    it('should handle an empty response body', async () => {
       await simpleServer(async context => {
         const res = await rdfFetch(context.baseUrl, { factory: rdfDataset, formats })
+        const dataset = await res.dataset()
 
-        strictEqual(typeof res.dataset, 'undefined')
+        strictEqual(dataset.size, 0)
       }, {
         '/': {
-          content: null
+          content: null,
+          contentType: 'text/turtle'
         }
       })
     })

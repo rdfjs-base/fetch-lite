@@ -14,7 +14,7 @@ function middlewareFactory ({ baseUrl, content, contentType, context, headers = 
       headers
     }
 
-    if (content && contentType) {
+    if (contentType) {
       context.res.headers['content-type'] = contentType
     }
 
