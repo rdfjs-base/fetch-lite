@@ -1,7 +1,5 @@
 # @rdfjs/fetch-lite
-
-[![Build Status](https://travis-ci.org/rdfjs/fetch-lite.svg?branch=master)](https://travis-ci.org/rdfjs/fetch-lite)
-
+[![build status](https://img.shields.io/github/workflow/status/rdfjs-base/fetch-lite/Test)](https://github.com/rdfjs-base/fetch-lite/actions/workflows/test.yaml)
 [![npm version](https://img.shields.io/npm/v/@rdfjs/fetch-lite.svg)](https://www.npmjs.com/package/@rdfjs/fetch-lite)
 
 Wrapper for fetch to simplify sending and retrieving RDF data.
@@ -60,24 +58,20 @@ The stream API is used to process all quads.
 For all `rdfs:label` quads of the defined entity, the object language and value will be written to the console.
 
 ```javascript
-const formats = require('@rdfjs/formats-common')
-const fetch = require('@rdfjs/fetch-lite')
+import formats from '@rdfjs/formats-common'
+import fetch from '@rdfjs/fetch-lite'
 
 const entity = 'http://www.wikidata.org/entity/Q2'
 const label = 'http://www.w3.org/2000/01/rdf-schema#label'
 
-fetch('https://www.wikidata.org/wiki/Special:EntityData/Q2.ttl', { formats })
-  .then(res => res.quadStream())
-  .then(quadStream => {
-    return new Promise(resolve => {
-      quadStream.on('end', resolve)
+const res = await fetch('https://www.wikidata.org/wiki/Special:EntityData/Q2.ttl', { formats })
+const quadStream = await res.quadStream()
 
-      quadStream.on('data', quad => {
-        if (quad.subject.value === entity && quad.predicate.value === label) {
-          console.log(`${quad.object.language}: ${quad.object.value}`)
-        }
-      })
-    })
-  })
-  .catch(err => console.error(err))
+quadStream.on('error', err => console.error(err))
+
+quadStream.on('data', quad => {
+  if (quad.subject.value === entity && quad.predicate.value === label) {
+    console.log(`${quad.object.language}: ${quad.object.value}`)
+  }
+})
 ```

@@ -1,22 +1,21 @@
-import { deepStrictEqual, rejects, strictEqual } from 'assert'
+import { rejects, strictEqual } from 'assert'
 import formats from '@rdfjs/formats-common'
 import SinkMap from '@rdfjs/sink-map'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
 import rdfFetch from '../index.js'
-import toStream from '../lib/toStream.js'
 import example from './support/example.js'
-import virtualResource from './support/virtualResource.js'
+import simpleServer from './support/simpleServer.js'
 
 describe('request', () => {
   it('should fetch the defined resource', async () => {
-    const id = '/request/fetch'
+    const context = await simpleServer(async ({ baseUrl }) => {
+      await rdfFetch(baseUrl, { formats })
+    }, {
+      '/': {}
+    })
 
-    const result = virtualResource({ id })
-
-    await rdfFetch(`http://example.org${id}`, { formats })
-
-    strictEqual(result.touched, true)
+    strictEqual(context.resources['/'].touched, true)
   })
 
   it('should use the given fetch function', async () => {
@@ -35,128 +34,127 @@ describe('request', () => {
   })
 
   it('should use the given accept header', async () => {
-    const id = '/request/accept-header'
-
-    const result = virtualResource({ id })
-
-    await rdfFetch(`http://example.org${id}`, {
-      formats,
-      headers: {
-        accept: 'text/html'
-      }
+    const context = await simpleServer(async ({ baseUrl }) => {
+      await rdfFetch(baseUrl, {
+        formats,
+        headers: {
+          accept: 'text/html'
+        }
+      })
+    }, {
+      '/': {}
     })
 
-    deepStrictEqual(result.headers.accept, 'text/html')
+    strictEqual(context.resources['/'].req.headers.accept, 'text/html')
   })
 
   it('should build an accept header based on the given parsers', async () => {
-    const id = '/request/accept-parsers'
+    const context = await simpleServer(async ({ baseUrl }) => {
+      const customFormats = {
+        parsers: new SinkMap([
+          ['application/ld+json', { import: () => {} }],
+          ['text/turtle', { import: () => {} }]
+        ])
+      }
 
-    const result = virtualResource({ id })
+      await rdfFetch(baseUrl, { formats: customFormats })
+    }, {
+      '/': {}
+    })
 
-    const customFormats = {
-      parsers: new SinkMap([
-        ['application/ld+json', { import: () => {} }],
-        ['text/turtle', { import: () => {} }]
-      ])
-    }
-
-    await rdfFetch(`http://example.org${id}`, { formats: customFormats })
-
-    deepStrictEqual(result.headers.accept, 'application/ld+json, text/turtle')
+    strictEqual(context.resources['/'].req.headers.accept, 'application/ld+json, text/turtle')
   })
 
   it('should forward a string body without changes', async () => {
-    const id = '/request/string'
+    const context = await simpleServer(async ({ baseUrl }) => {
+      await rdfFetch(baseUrl, { formats, method: 'POST', body: 'test' })
+    }, {
+      '/': {
+        method: 'POST'
+      }
+    })
 
-    const result = virtualResource({ method: 'POST', id })
-
-    await rdfFetch(`http://example.org${id}`, { formats, method: 'POST', body: 'test' })
-
-    strictEqual(result.content, 'test')
+    strictEqual(context.resources['/'].req.content, 'test')
   })
 
   it('should serialize a stream body using the serializer given in the content-type header', async () => {
-    const id = '/request/stream'
-
-    const result = virtualResource({ method: 'POST', id })
-
-    await rdfFetch(`http://example.org${id}`, {
-      formats,
-      method: 'POST',
-      headers: {
-        'content-type': 'application/n-triples'
-      },
-      body: toStream(example.dataset)
+    const context = await simpleServer(async ({ baseUrl }) => {
+      await rdfFetch(baseUrl, {
+        formats,
+        method: 'POST',
+        headers: {
+          'content-type': 'application/n-triples'
+        },
+        body: Readable.from(example.dataset)
+      })
+    }, {
+      '/': {
+        method: 'POST'
+      }
     })
 
-    strictEqual(result.content, example.quadNt)
+    strictEqual(context.resources['/'].req.content, example.quadNt)
   })
 
   it('should throw an error if there is no serializer for the given content-type header', async () => {
-    const id = '/request/serializer-not-found'
-
-    virtualResource({ id })
-
     await rejects(async () => {
-      await rdfFetch(`http://example.org${id}`, {
-        formats,
-        headers: {
-          'content-type': 'text/plain'
-        },
-        body: toStream(example.dataset)
+      await simpleServer(async ({ baseUrl }) => {
+        await rdfFetch(baseUrl, {
+          formats,
+          headers: {
+            'content-type': 'text/plain'
+          },
+          body: Readable.from(example.dataset)
+        })
       })
+    }, {
+      message: /text\/plain/
     })
   })
 
   it('should use the first serializer found to serialize the body if no content type was defined', async () => {
-    const id = '/request/serializer-first'
+    const context = await simpleServer(async ({ baseUrl }) => {
+      const stream = Readable.from(['test'])
 
-    const result = virtualResource({ method: 'POST', id })
+      const customFormats = {
+        parsers: new SinkMap(),
+        serializers: new SinkMap([
+          ['text/turtle', { import: () => stream }],
+          ['application/ld+json', { import: () => {} }]
+        ])
+      }
 
-    const stream = new Readable({
-      read: () => {
-        stream.push('test')
-        stream.push(null)
+      await rdfFetch(baseUrl, {
+        formats: customFormats,
+        method: 'POST',
+        body: Readable.from(example.dataset)
+      })
+    }, {
+      '/': {
+        method: 'POST'
       }
     })
 
-    const customFormats = {
-      parsers: new SinkMap(),
-      serializers: new SinkMap([
-        ['text/turtle', {
-          import: () => {
-            return stream
-          }
-        }],
-        ['application/ld+json', { import: () => {} }]
-      ])
-    }
-
-    await rdfFetch(`http://example.org${id}`, {
-      formats: customFormats,
-      method: 'POST',
-      body: toStream(example.dataset)
-    })
-
-    deepStrictEqual(result.headers['content-type'], 'text/turtle')
-    strictEqual(result.content, 'test')
+    strictEqual(context.resources['/'].req.headers['content-type'], 'text/turtle')
+    strictEqual(context.resources['/'].req.content, 'test')
   })
 
   it('should serialize a iterable', async () => {
-    const id = '/request/iterable'
-
-    const result = virtualResource({ method: 'POST', id })
-
-    await rdfFetch(`http://example.org${id}`, {
-      formats,
-      method: 'POST',
-      headers: {
-        'content-type': 'application/n-triples'
-      },
-      body: example.dataset
+    const context = await simpleServer(async ({ baseUrl }) => {
+      await rdfFetch(baseUrl, {
+        formats,
+        method: 'POST',
+        headers: {
+          'content-type': 'application/n-triples'
+        },
+        body: example.dataset
+      })
+    }, {
+      '/': {
+        method: 'POST'
+      }
     })
 
-    strictEqual(result.content, example.quadNt)
+    strictEqual(context.resources['/'].req.content, example.quadNt)
   })
 })
