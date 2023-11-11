@@ -3,7 +3,7 @@ import formats from '@rdfjs/formats-common'
 import SinkMap from '@rdfjs/sink-map'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
-import rdfFetch from '../index.js'
+import rdfFetch, { Headers } from '../index.js'
 import example from './support/example.js'
 import simpleServer from './support/simpleServer.js'
 
@@ -27,13 +27,28 @@ describe('request', () => {
 
         return Promise.resolve({ headers: new Map() })
       },
-      formats: formats
+      formats
     })
 
     strictEqual(touched, true)
   })
 
-  it('should use the given accept header', async () => {
+  it('should use the given accept header given as Headers object', async () => {
+    const context = await simpleServer(async ({ baseUrl }) => {
+      await rdfFetch(baseUrl, {
+        formats,
+        headers: new Headers({
+          accept: 'text/html'
+        })
+      })
+    }, {
+      '/': {}
+    })
+
+    strictEqual(context.resources['/'].req.headers.accept, 'text/html')
+  })
+
+  it('should use the given accept header given as plain object', async () => {
     const context = await simpleServer(async ({ baseUrl }) => {
       await rdfFetch(baseUrl, {
         formats,
@@ -77,7 +92,26 @@ describe('request', () => {
     strictEqual(context.resources['/'].req.content, 'test')
   })
 
-  it('should serialize a stream body using the serializer given in the content-type header', async () => {
+  it('should serialize a stream body using the serializer given in the content-type header as Headers object', async () => {
+    const context = await simpleServer(async ({ baseUrl }) => {
+      await rdfFetch(baseUrl, {
+        formats,
+        method: 'POST',
+        headers: new Headers({
+          'content-type': 'application/n-triples'
+        }),
+        body: Readable.from(example.dataset)
+      })
+    }, {
+      '/': {
+        method: 'POST'
+      }
+    })
+
+    strictEqual(context.resources['/'].req.content, example.quadNt)
+  })
+
+  it('should serialize a stream body using the serializer given in the content-type header as plain object', async () => {
     const context = await simpleServer(async ({ baseUrl }) => {
       await rdfFetch(baseUrl, {
         formats,
