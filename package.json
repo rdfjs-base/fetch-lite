@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rdfjs-base/fetch-lite.git"
+    "url": "https://github.com/rdfjs-base/fetch-lite.git"
   },
   "keywords": [
     "fetch",

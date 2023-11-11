@@ -1,5 +1,6 @@
 # @rdfjs/fetch-lite
-[![build status](https://img.shields.io/github/workflow/status/rdfjs-base/fetch-lite/Test)](https://github.com/rdfjs-base/fetch-lite/actions/workflows/test.yaml)
+
+[![build status](https://img.shields.io/github/actions/workflow/status/rdfjs-base/fetch-lite/test.yaml?branch=master)](https://github.com/rdfjs-base/fetch-lite/actions/workflows/test.yaml)
 [![npm version](https://img.shields.io/npm/v/@rdfjs/fetch-lite.svg)](https://www.npmjs.com/package/@rdfjs/fetch-lite)
 
 Wrapper for fetch to simplify sending and retrieving RDF data.
