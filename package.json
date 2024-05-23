@@ -26,23 +26,23 @@
   },
   "homepage": "https://github.com/rdfjs-base/fetch-lite",
   "dependencies": {
-    "is-stream": "^3.0.0",
+    "is-stream": "^4.0.1",
     "nodeify-fetch": "^3.1.0",
-    "readable-stream": "^4.4.2"
+    "readable-stream": "^4.5.2"
   },
   "devDependencies": {
-    "@rdfjs/data-model": "^2.0.1",
-    "@rdfjs/dataset": "^2.0.1",
-    "@rdfjs/environment": "^0.1.2",
-    "@rdfjs/formats-common": "^3.1.0",
-    "@rdfjs/sink-map": "^2.0.0",
-    "@rdfjs/to-ntriples": "^2.0.0",
+    "@rdfjs/data-model": "^2.0.2",
+    "@rdfjs/dataset": "^2.0.2",
+    "@rdfjs/environment": "^1.0.0",
+    "@rdfjs/formats": "^4.0.0",
+    "@rdfjs/sink-map": "^2.0.1",
+    "@rdfjs/to-ntriples": "^3.0.1",
     "assert": "^2.1.0",
-    "c8": "^8.0.1",
-    "express-as-promise": "^1.2.0",
-    "mocha": "^10.2.0",
+    "c8": "^9.1.0",
+    "express-as-promise": "^2.0.0",
+    "mocha": "^10.4.0",
     "stream-chunks": "^1.0.0",
-    "stricter-standard": "^0.3.0",
+    "stricter-standard": "^0.3.1",
     "test-runner-browser": "^0.1.0"
   }
 }

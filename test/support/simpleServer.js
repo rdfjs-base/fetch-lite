@@ -56,7 +56,7 @@ async function simpleServer (func, resources = {}) {
   }
 
   await withServer(async server => {
-    context.baseUrl = await server.listen()
+    context.baseUrl = (await server.listen()).toString()
 
     for (const [path, config] of Object.entries(resources)) {
       const middleware = middlewareFactory({
