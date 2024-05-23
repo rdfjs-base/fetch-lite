@@ -1,6 +1,6 @@
 import { strictEqual } from 'assert'
 import DatasetFactory from '@rdfjs/dataset/Factory.js'
-import formats from '@rdfjs/formats-common'
+import formats from '@rdfjs/formats'
 import { describe, it } from 'mocha'
 import rdfFetch from '../index.js'
 

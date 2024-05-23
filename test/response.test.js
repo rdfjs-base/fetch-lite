@@ -1,6 +1,6 @@
 import { deepStrictEqual, rejects, strictEqual } from 'assert'
 import rdfDataset from '@rdfjs/dataset'
-import formats from '@rdfjs/formats-common'
+import formats from '@rdfjs/formats'
 import SinkMap from '@rdfjs/sink-map'
 import { isReadableStream } from 'is-stream'
 import { describe, it } from 'mocha'

@@ -1,5 +1,5 @@
 import { rejects, strictEqual } from 'assert'
-import formats from '@rdfjs/formats-common'
+import formats from '@rdfjs/formats'
 import SinkMap from '@rdfjs/sink-map'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
