@@ -5,10 +5,10 @@ function createFetch (context) {
     const factory = typeof context.dataset === 'function' ? context : null
 
     return fetch(url, {
-      ...options,
-      factory,
       fetch: context._fetch.fetch,
-      formats: context.formats
+      formats: context.formats,
+      ...options,
+      factory
     })
   }
 

@@ -4,6 +4,7 @@ import DatasetFactory from '@rdfjs/dataset/Factory.js'
 import Environment from '@rdfjs/environment'
 import FormatsFactory from '@rdfjs/environment/FormatsFactory.js'
 import formats from '@rdfjs/formats-common'
+import SinkMap from '@rdfjs/sink-map'
 import toNT from '@rdfjs/to-ntriples'
 import withServer from 'express-as-promise/withServer.js'
 import { describe, it } from 'mocha'
@@ -106,6 +107,37 @@ describe('FetchFactory', () => {
       })
     })
 
+    it('should allow overwriting the formats', async () => {
+      await withServer(async server => {
+        let called = false
+
+        class CustomParser extends formats.parsers.get('text/turtle').constructor {
+          import (stream) {
+            called = true
+
+            return super.import(stream)
+          }
+        }
+        const customFormats = {
+          parsers: new SinkMap([['text/turtle', new CustomParser()]])
+        }
+
+        const env = new Environment([DataFactory, DatasetFactory, FetchFactory, FormatsFactory])
+        env.formats.import(formats)
+
+        server.app.get('/', (req, res) => {
+          res.set('content-type', 'text/turtle').end(toNT(example.quad))
+        })
+
+        const res = await env.fetch(await server.listen(), {
+          formats: customFormats
+        })
+        await res.dataset()
+
+        strictEqual(called, true)
+      })
+    })
+
     it('should use an alternative fetch implementation if set in the config', async () => {
       await withServer(async server => {
         let called = false
@@ -123,6 +155,29 @@ describe('FetchFactory', () => {
         })
 
         await env.fetch(await server.listen())
+
+        strictEqual(called, true)
+      })
+    })
+
+    it('should allow overwriting the fetch implementation', async () => {
+      await withServer(async server => {
+        let called = false
+        const customFetch = (url, options) => {
+          called = true
+
+          return nodeFetch(url, options)
+        }
+        const env = new Environment([DataFactory, FetchFactory, FormatsFactory])
+        env.formats.import(formats)
+
+        server.app.get('/', (req, res) => {
+          res.set('content-type', 'text/turtle').end(toNT(example.quad))
+        })
+
+        await env.fetch(await server.listen(), {
+          fetch: customFetch
+        })
 
         strictEqual(called, true)
       })
