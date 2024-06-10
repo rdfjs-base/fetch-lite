@@ -38,7 +38,7 @@
     "@rdfjs/sink-map": "^2.0.1",
     "@rdfjs/to-ntriples": "^3.0.1",
     "assert": "^2.1.0",
-    "c8": "^9.1.0",
+    "c8": "^10.0.0",
     "express-as-promise": "^2.0.0",
     "mocha": "^10.4.0",
     "stream-chunks": "^1.0.0",
