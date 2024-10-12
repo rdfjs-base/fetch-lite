@@ -1,5 +1,6 @@
 import { rejects, strictEqual } from 'assert'
-import formats from '@rdfjs/formats'
+import dataModel from '@rdfjs/data-model'
+import formats from '@rdfjs/formats/pretty.js'
 import SinkMap from '@rdfjs/sink-map'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
@@ -190,5 +191,29 @@ describe('request', () => {
     })
 
     strictEqual(context.resources['/'].req.content, example.quadNt)
+  })
+
+  it('should serialize a iterable with the given prefixes', async () => {
+    const context = await simpleServer(async ({ baseUrl }) => {
+      const prefixes = new Map([
+        ['ex', dataModel.namedNode('http://example.org/')]
+      ])
+
+      await rdfFetch(baseUrl, {
+        formats,
+        method: 'POST',
+        headers: {
+          'content-type': 'text/turtle'
+        },
+        body: example.dataset,
+        prefixes
+      })
+    }, {
+      '/': {
+        method: 'POST'
+      }
+    })
+
+    strictEqual(context.resources['/'].req.content, example.quadTtl)
   })
 })

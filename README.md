@@ -39,6 +39,7 @@ The following `options` influence the logic of RDF quad processing:
   By setting this field manually a specific serializer can be enforced.
 - `body`: If the request should send quads, the quads must be given either as a stream or as an iterable.
   Iterables will be converted to streams before they are handed over to the serializer.
+- `prefixes`: A map of prefixes that will be handed over to the serializer.
 
 ### Response
 
