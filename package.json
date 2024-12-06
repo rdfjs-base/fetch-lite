@@ -40,7 +40,7 @@
     "assert": "^2.1.0",
     "c8": "^10.0.0",
     "express-as-promise": "^2.0.0",
-    "mocha": "^10.4.0",
+    "mocha": "^11.0.1",
     "stream-chunks": "^1.0.0",
     "stricter-standard": "^0.3.1",
     "test-runner-browser": "^0.1.0"
